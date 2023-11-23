@@ -2,6 +2,8 @@ package fr.digi.m0923.pedc.bo;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "LIVRE")
 public class Livre {
@@ -13,6 +15,14 @@ public class Livre {
     private String titre;
     @Column(name= "AUTEUR")
     private String auteur;
+
+    @ManyToMany
+    @JoinTable(name="COMPO",
+        joinColumns = @JoinColumn(name= "ID_LIV",referencedColumnName = "ID"),
+        inverseJoinColumns = @JoinColumn(name= "ID_EMP", referencedColumnName = "ID")
+
+    )
+    private Set<Emprunt> emprunts;
 
     public Livre() {
     }
@@ -26,6 +36,18 @@ public class Livre {
     public Livre(String titre, String auteur) {
         this.titre = titre;
         this.auteur = auteur;
+    }
+
+    public Livre(Set<Emprunt> emprunts) {
+        this.emprunts = emprunts;
+    }
+
+    public Set<Emprunt> getEmprunts() {
+        return emprunts;
+    }
+
+    public void setEmprunts(Set<Emprunt> emprunts) {
+        this.emprunts = emprunts;
     }
 
     public Integer getId() {
@@ -58,6 +80,7 @@ public class Livre {
                 "id=" + id +
                 ", titre='" + titre + '\'' +
                 ", auteur='" + auteur + '\'' +
+                ", emprunts=" + emprunts +
                 '}';
     }
 }
